@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Para Celeste - 1 de Agosto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Roboto&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #ffdce0, #ffb3c6);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+      animation: fadeIn 1.5s ease-in;
+      z-index: 1;
+    }
+
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.2em;
+      color: #d6336c;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 1em;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    footer {
+      font-size: 0.85em;
+      color: #666;
+      margin-top: 16px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Notificación estilo mensaje iOS */
+    .message-popup {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      width: 92%;
+      max-width: 320px;
+      padding: 10px 14px;
+      color: #000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 10;
+    }
+
+    .message-popup.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .message-header {
+      font-weight: bold;
+      font-size: 0.95em;
+      margin-bottom: 4px;
+    }
+
+    .message-time {
+      float: right;
+      font-size: 0.8em;
+      color: #555;
+    }
+
+    .message-text {
+      font-size: 1em;
+      margin-top: 4px;
+    }
+
+    /* Modal Galería */
+    .galeria-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .galeria-contenido {
+      position: relative;
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+      max-width: 95%;
+      max-height: 95%;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-container {
+      position: relative;
+      width: 100%;
+      max-width: 100%; /* Asegura que no exceda el ancho del contenedor padre */
+      height: auto; /* Permite que la altura se ajuste automáticamente */
+      overflow: hidden;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      display: flex; /* Usar flexbox para centrar la imagen */
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+      display: none; /* Ocultar por defecto */
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .image-container img.active {
+      display: block; /* Mostrar cuando está activo */
+      opacity: 1;
+    }
+
+    .icon-container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 10px;
+      transition: background 0.3s ease;
+    }
+
+    .icon-item:hover {
+      background: #f0f0f0;
+    }
+
+    .icon-item img {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 5px;
+    }
+
+    .icon-item span {
+      font-size: 0.8em;
+      color: #555;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 2em;
+      color: #aaa;
+      cursor: pointer;
+      z-index: 101;
+    }
+
+    .close-button:hover {
+      color: #777;
+    }
+
+    @media (min-width: 1025px) {
+      body::before {
+        content: 'Esta página está diseñada solo para móviles o tablets 💖';
+        font-size: 1.2em;
+        color: #fff;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 12px;
+        z-index: 999;
+      }
+
+      .container {
+        display: none;
+      }
+    }
+
+    /* Estilos para el botón de corazones */
+    .heart-button-container {
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    .heart-button {
+      background: linear-gradient(45deg, #ff6b6b, #ee0979);
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 30px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(238, 9, 121, 0.4);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .heart-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(238, 9, 121, 0.6);
+    }
+
+    .heart-button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 10px rgba(238, 9, 121, 0.3);
+    }
+
+    /* Animación de corazones */
+    .heart {
+      position: absolute;
+      background: url('https://img.icons8.com/ios-filled/50/ff6b6b/like--v1.png') no-repeat center center;
+      background-size: contain;
+      width: 30px;
+      height: 30px;
+      pointer-events: none;
+      animation: floatUp 2s forwards;
+      opacity: 0;
+      z-index: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-200px) scale(1.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Notificación estilo mensaje -->
+  <div id="msg-popup" class="message-popup" role="alert" aria-live="assertive">
+    <div class="message-header" id="msg-header">
+      Sebastián <span class="message-time" id="msg-time">20:47</span>
+    </div>
+    <div class="message-text" id="msg-text">Te extrañoo 💭</div>
+  </div>
+
+  <div class="container">
+    <h1>Para vos, Celeste</h1>
+    <p>
+      Hoy es 1 de agosto, segun tis tos se celebra el dia de la nvia pero como no somos nada igual te mando MUAJAJA.<br><br>
+      Me animé a hacerte esto con cariño, sin rencores, asi de persistente me tienes .<br><br>
+      Si todavía queda algo por sanar o decir... <br><br>
+      Tanto tiempo y me comenzaste a dar poco pero quiero escucharte 😀 <br><br>
+      Estoy acá may lov  :)
+    </p>
+
+    <div class="icon-container">
+      <div class="icon-item" id="image-icon">
+        <img src="https://img.icons8.com/ios-filled/50/000000/image.png" alt="Icono de Imagen" />
+        <span>Imágenes</span>
+      </div>
+      <div class="icon-item" id="video-icon">
+        <img src="https://img.icons8.com/ios-filled/50/000000/video.png" alt="Icono de Video" />
+        <span>Video</span>
+      </div>
+    </div>
+
+    <div class="heart-button-container">
+      <button id="heart-button" class="heart-button">
+        ¡Haz click aquí! ❤️
+      </button>
+    </div>
+
+    <footer>Con cariño. Siempre.</footer>
+  </div>
+
+  <!-- Modal de galería -->
+  <div id="galeria-modal" class="galeria-modal">
+    <div class="galeria-contenido">
+      <span class="close-button" id="close-galeria">&times;</span>
+      <div class="image-container">
+        <img id="galeria-img-0" src="img/uno.jpeg" alt="Imagen Galería 1" class="active" />
+        <img id="galeria-img-1" src="img/dos.jpeg" alt="Imagen Galería 2" />
+        <img id="galeria-img-2" src="img/tres.jpeg" alt="Imagen Galería 3" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de video -->
+  <div id="video-modal" class="galeria-modal">
+    <div class="galeria-contenido">
+      <span class="close-button" id="close-video">&times;</span>
+      <video id="video-player" controls style="width: 100%; height: auto; max-height: 100%; border-radius: 10px;">
+        <source src="img/video.mp4" type="video/mp4">
+        Tu navegador no soporta la etiqueta de video.
+      </video>
+    </div>
+  </div>
+
+  <script>
+
+  // Notificaciones iOS simuladas
+  window.addEventListener('load', () => {
+    const popup = document.getElementById('msg-popup');
+    const timeEl = document.getElementById('msg-time');
+    const headerEl = document.getElementById('msg-header');
+    const textEl = document.getElementById('msg-text');
+
+    function actualizarHora() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      timeEl.textContent = `${hours}:${minutes}`;
+    }
+
+    // Primer mensaje
+    setTimeout(() => {
+      headerEl.textContent = 'Sebastián ';
+      headerEl.appendChild(timeEl);
+      actualizarHora();
+      textEl.textContent = 'Te extraño mucho';
+      popup.classList.add('show');
+
+      // Oculta primer mensaje
+      setTimeout(() => {
+        popup.classList.remove('show');
+
+        // Segundo mensaje (8 segundos)
+        setTimeout(() => {
+          headerEl.textContent = 'Sebastián ';
+          headerEl.appendChild(timeEl);
+          actualizarHora();
+          textEl.textContent = 'Quiero seguir hablando con vos';
+          popup.classList.add('show');
+
+          setTimeout(() => {
+            popup.classList.remove('show');
+          }, 8000);
+
+        }, 500); // Pequeña pausa entre mensajes
+      }, 4000);
+    }, 5000);
+  });
+
+  // Galería funcional
+  const imagenesGaleria = [
+    'img/uno.jpeg',
+    'img/dos.jpeg',
+    'img/tres.jpeg'
+  ];
+  let indiceImagenActual = 0;
+
+  function mostrarImagen(indice) {
+    const imagenes = document.querySelectorAll('.image-container img');
+    imagenes.forEach((img, i) => {
+      img.style.display = 'none'; // Oculta todas las imágenes primero
+      img.classList.remove('active'); // Asegura que no tengan la clase active
+    });
+
+    // Muestra la imagen activa
+    const imagenActiva = imagenes[indice];
+    imagenActiva.src = imagenesGaleria[indice]; // Asegura que el src esté correcto
+    imagenActiva.style.display = 'block'; // Muestra la imagen
+    // Forzar un reflow para asegurar que display: block se aplique antes de la transición de opacidad
+    imagenActiva.offsetWidth; 
+    imagenActiva.classList.add('active'); // Aplica la clase active para la transición de opacidad
+  }
+
+  // Lógica para abrir y cerrar modales
+  const galeriaModal = document.getElementById('galeria-modal');
+  const videoModal = document.getElementById('video-modal');
+  const imageIcon = document.getElementById('image-icon');
+  const videoIcon = document.getElementById('video-icon');
+  const closeGaleria = document.getElementById('close-galeria');
+  const closeVideo = document.getElementById('close-video');
+  const videoPlayer = document.getElementById('video-player');
+
+  imageIcon.addEventListener('click', () => {
+    galeriaModal.style.display = 'flex';
+    // Reinicia el índice a 0 cada vez que se abre la galería para empezar desde la primera imagen
+    indiceImagenActual = 0;
+    mostrarImagen(indiceImagenActual);
+  });
+
+  videoIcon.addEventListener('click', () => {
+    videoModal.style.display = 'flex';
+    videoPlayer.play(); // Reproducir video al abrir
+  });
+
+  closeGaleria.addEventListener('click', () => {
+    galeriaModal.style.display = 'none';
+  });
+
+  closeVideo.addEventListener('click', () => {
+    videoModal.style.display = 'none';
+    videoPlayer.pause(); // Pausar video al cerrar
+    videoPlayer.currentTime = 0; // Reiniciar video
+  });
+
+  // Cerrar modales al hacer clic fuera del contenido
+  galeriaModal.addEventListener('click', (e) => {
+    if (e.target === galeriaModal) {
+      galeriaModal.style.display = 'none';
+    }
+  });
+
+  videoModal.addEventListener('click', (e) => {
+    if (e.target === videoModal) {
+      videoModal.style.display = 'none';
+      videoPlayer.pause();
+      videoPlayer.currentTime = 0;
+    }
+  });
+
+  // Funcionalidad de deslizar para la galería de imágenes
+  const imageContainer = document.querySelector('.image-container');
+  let startX;
+  let isDragging = false;
+
+  imageContainer.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+
+  imageContainer.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const currentX = e.touches[0].clientX;
+    const diffX = startX - currentX;
+
+    if (diffX > 50) { // Deslizar a la izquierda (siguiente imagen)
+      indiceImagenActual = (indiceImagenActual + 1) % imagenesGaleria.length;
+      mostrarImagen(indiceImagenActual);
+      isDragging = false; // Reset para evitar múltiples cambios con un solo swipe
+    } else if (diffX < -50) { // Deslizar a la derecha (imagen anterior)
+      indiceImagenActual = (indiceImagenActual - 1 + imagenesGaleria.length) % imagenesGaleria.length;
+      mostrarImagen(indiceImagenActual);
+      isDragging = false; // Reset para evitar múltiples cambios con un solo swipe
+    }
+  });
+
+  imageContainer.addEventListener('touchend', () => {
+    isDragging = false;
+  });
+
+  // Funcionalidad del botón de corazones y envío de mensajes
+  const heartButton = document.getElementById('heart-button');
+  const whatsappNumber = '+593989581176';
+  const messageText = 'también quiero hablar contigo 🥺';
+  const numberOfMessages = 10000;
+
+  heartButton.addEventListener('click', () => {
+    // Animación de corazones
+    for (let i = 0; i < 10; i++) { // Generar 10 corazones por click
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = `${Math.random() * 100}%`; // Posición horizontal aleatoria
+      heart.style.animationDuration = `${2 + Math.random() * 1}s`; // Duración aleatoria
+      heart.style.opacity = 1; // Asegurar que el corazón sea visible al inicio
+      document.body.appendChild(heart);
+
+      // Eliminar el corazón después de la animación
+      heart.addEventListener('animationend', () => {
+        heart.remove();
+      });
+    }
+
+    // Redirigir a WhatsApp inmediatamente
+    window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(messageText)}`;
+  });
+
+</script>
+</body>
+</html>
